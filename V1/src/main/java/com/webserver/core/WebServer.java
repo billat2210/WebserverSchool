@@ -1,5 +1,9 @@
 package com.webserver.core;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 /**
  * 小鸟WebServer
  * 实现Tomcat的基础功能的一个Web容器
@@ -11,5 +15,30 @@ package com.webserver.core;
  * 4:可以管理部署多个不同的网络应用.
  */
 public class WebServer {
-
+    private ServerSocket serverSocket;
+    public WebServer(){
+        try {
+            System.out.println("正在启动服务端...");
+            serverSocket = new ServerSocket(8088);
+            System.out.println("服务端启动完毕!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void start(){
+        try {
+            /*
+                http://localhost:8088
+             */
+            System.out.println("等待客户端连接...");
+            Socket socket = serverSocket.accept();
+            System.out.println("一个客户端连接了!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void main(String[] args) {
+        WebServer server = new WebServer();
+        server.start();
+    }
 }
