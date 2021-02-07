@@ -3,6 +3,8 @@ package com.webserver.core;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *  负责与指定客户端进行HTTP交互
@@ -41,9 +43,17 @@ public class ClientHandler implements Runnable{
             System.out.println("protocol:"+protocol);//protocol:HTTP/1.1
 
             //读取所有消息头
-            line = readLine();
-            System.out.println("消息头:"+line);
-
+            Map<String,String> headers = new HashMap<>();
+            //下面读取每一个消息头后，将消息头的名字作为key，消息头的值作为value保存到headers中
+            while(true) {
+                line = readLine();
+                //读取消息头时，如果只读取到了回车加换行符就应当停止读取
+                if(line.isEmpty()){//readLine单独读取CRLF返回值应当是空字符串
+                    break;
+                }
+                System.out.println("消息头:" + line);
+            }
+            System.out.println("headers:"+headers);
             //2处理请求
 
             //3发送响应
