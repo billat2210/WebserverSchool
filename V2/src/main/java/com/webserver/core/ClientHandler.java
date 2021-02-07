@@ -1,6 +1,7 @@
 package com.webserver.core;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 
 /**
@@ -18,6 +19,14 @@ public class ClientHandler implements Runnable{
     public void run() {
         try{
             //1解析请求
+            InputStream in = socket.getInputStream();
+            //测试读取客户端发送过来的请求内容
+            int d;
+            while ((d = in.read())!=-1){
+                char c = (char)d;
+                System.out.print(c);
+            }
+
 
             //2处理请求
 
