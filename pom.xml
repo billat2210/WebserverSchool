@@ -6,6 +6,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>V1</module>
+        <module>V2</module>
     </modules>
     <properties>
         <!-- 设置 JDK 版本为 1.8 -->

@@ -1,0 +1,13 @@
+1:在创建新的项目版面时，要将上一个版本的代码复制到当前版本项目
+  如果将上个版本中src/main/java目录粘贴到新版本中时，发现新版本的src/main/java中的源代码
+  包不是com.webserver.xxx开始的，而是java.com.webserver.xxx开始的，说明目录结构复制错误
+  运行代码时idea会报安全异常!
+  解决，将复制的包删除，从新将上个版本的java目录覆盖当前项目的src/main目录中即可
+
+2:在src/main/java下不能新建包和类
+  原因:java目录应该不是蓝色图标了(不是源码目录)，因此idea不允许在这里创建包和类
+  解决:点击idea左上角的File->Project Structure
+       弹出框中，左侧的Project Setting->Modules
+       中间的选择当前项目
+       右侧框中分别选择sources->在下方选择src/main中的java目录，再在两者之间点击源码图标
+       即:Mark as->Sources
