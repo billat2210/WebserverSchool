@@ -19,22 +19,8 @@ public class ClientHandler implements Runnable{
     public void run() {
         try{
             //1解析请求
-            InputStream in = socket.getInputStream();
-            //测试读取客户端发送过来的请求内容
-            int d;
-            char cur=' ';//表示本次读取到的字符
-            char pre=' ';//表示上次读取到的字符
-            StringBuilder builder = new StringBuilder();//保存读取到的所有字符
-            while ((d = in.read())!=-1){
-                cur = (char)d;//本次读取到的字符
-                //如果上次读取的是回车符，本次读取的是换行符则停止读取
-                if(pre==13 && cur==10){
-                    break;
-                }
-                builder.append(cur);
-                pre = cur;
-            }
-            String line = builder.toString().trim();
+            //读取请求行
+            String line = readLine();
             System.out.println("请求行:"+line);
             String method;//请求方式
             String uri;//抽象路径
@@ -54,7 +40,9 @@ public class ClientHandler implements Runnable{
             System.out.println("uri:"+uri);//uri:/index.html
             System.out.println("protocol:"+protocol);//protocol:HTTP/1.1
 
-
+            //读取所有消息头
+            line = readLine();
+            System.out.println("消息头:"+line);
 
             //2处理请求
 
@@ -71,4 +59,27 @@ public class ClientHandler implements Runnable{
             }
         }
     }
+
+    private String readLine() throws IOException {
+        /*
+            当socket对象相同时，无论调用多少次getInputStream方法，获取回来的输入流
+            总是同一个流。输出流也是一样的。
+         */
+        InputStream in = socket.getInputStream();
+        int d;
+        char cur=' ';//表示本次读取到的字符
+        char pre=' ';//表示上次读取到的字符
+        StringBuilder builder = new StringBuilder();//保存读取到的所有字符
+        while ((d = in.read())!=-1){
+            cur = (char)d;//本次读取到的字符
+            //如果上次读取的是回车符，本次读取的是换行符则停止读取
+            if(pre==13 && cur==10){
+                break;
+            }
+            builder.append(cur);
+            pre = cur;
+        }
+        return builder.toString().trim();
+    }
+
 }
