@@ -30,19 +30,59 @@ public class HttpRequest {
      */
     public HttpRequest(Socket socket){
         this.socket = socket;
+        //1解析请求行
+        parseRequestLine();
+        //2解析消息头
+        parseHeaders();
+        //3解析消息正文
+        parseContent();
 
     }
     //解析一个请求的三步骤:
     //1:解析请求行
     private void parseRequestLine(){
         System.out.println("HttpRequest:开始解析请求行...");
-
+        try {
+            String line = readLine();
+            System.out.println("请求行:"+line);
+            //http://localhost:8088/index.html
+            //将请求行按照空格拆分为三部分，并分别赋值给上述变量
+            String[] data = line.split("\\s");
+            method = data[0];
+            /*
+                下面的代码可能在运行后浏览器发送请求拆分时，在这里赋值给uri时出现
+                字符串下标越界异常，这是由于浏览器发送了空请求，原因与常见错误5一样。
+             */
+            uri = data[1];
+            protocol = data[2];
+            System.out.println("method:"+method);//method:GET
+            System.out.println("uri:"+uri);//uri:/index.html
+            System.out.println("protocol:"+protocol);//protocol:HTTP/1.1
+        }catch(IOException e){
+            e.printStackTrace();
+        }
         System.out.println("HttpRequest:请求行解析完毕!");
     }
     //2:解析消息头
     private void parseHeaders(){
         System.out.println("HttpRequest:开始解析消息头...");
-
+        try {
+            //下面读取每一个消息头后，将消息头的名字作为key，消息头的值作为value保存到headers中
+            while(true) {
+                String line = readLine();
+                //读取消息头时，如果只读取到了回车加换行符就应当停止读取
+                if(line.isEmpty()){//readLine单独读取CRLF返回值应当是空字符串
+                    break;
+                }
+                System.out.println("消息头:" + line);
+                //将消息头按照冒号空格拆分并存入到headers这个Map中保存
+                String[] data = line.split(":\\s");
+                headers.put(data[0],data[1]);
+            }
+            System.out.println("headers:"+headers);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
         System.out.println("HttpRequest:消息头解析完毕!");
     }
     //3:解析消息正文
