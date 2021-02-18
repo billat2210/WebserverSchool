@@ -10,3 +10,14 @@
   webapps下，并且子目录的名字就是该网络应用的名字。(tomcat也是这样管理的)
 2:在webapps下新建一个子目录:myweb,作为我们第一个网络应用(网站内容)
 3:在myweb下新建首页:index.html
+
+
+在ClientHandler中将一个页面以标准的HTTP响应格式发送给浏览器
+实现:
+在ClientHandler第三步响应客户端环节，先将固定的一个页面webapps/myweb/index.html发送给浏览器
+去显示。
+
+
+
+
+
