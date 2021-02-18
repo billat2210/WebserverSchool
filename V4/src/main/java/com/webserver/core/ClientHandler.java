@@ -57,6 +57,7 @@ public class ClientHandler implements Runnable{
                 headers.put(data[0],data[1]);
             }
             System.out.println("headers:"+headers);
+
             //2处理请求
 
             //3发送响应
