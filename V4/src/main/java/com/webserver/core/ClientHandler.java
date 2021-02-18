@@ -52,6 +52,9 @@ public class ClientHandler implements Runnable{
                     break;
                 }
                 System.out.println("消息头:" + line);
+                //将消息头按照冒号空格拆分并存入到headers这个Map中保存
+                data = line.split(":\\s");
+                headers.put(data[0],data[1]);
             }
             System.out.println("headers:"+headers);
             //2处理请求
