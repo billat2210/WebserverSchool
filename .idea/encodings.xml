@@ -2,6 +2,10 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/V1/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/V10/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/V10/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/V11/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/V11/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/V2/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/V3/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/V4/src/main/java" charset="UTF-8" />
@@ -9,5 +13,15 @@
     <file url="file://$PROJECT_DIR$/V5/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/V6/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/V6/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/V7/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/V7/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/v7-1/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/v7-1/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/v8-1/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/v8-1/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/v8/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/v8/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/v9/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/v9/src/main/resources" charset="UTF-8" />
   </component>
 </project>
