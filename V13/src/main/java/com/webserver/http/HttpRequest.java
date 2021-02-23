@@ -17,6 +17,9 @@ public class HttpRequest {
     private String method;//请求方式
     private String uri;//抽象路径
     private String protocol;//协议版本
+    private String requestURI;//存抽象路径中的请求部分，即：uri中？左侧的内容
+    private String queryString;//存抽象路径中的参数部分，即uri中？右侧内容
+    private Map<String ,String >parameter=new HashMap<>();//存每一组参数
 
     //消息头相关信息
     private Map<String,String> headers = new HashMap<>();
@@ -28,33 +31,33 @@ public class HttpRequest {
      * HttpRequest的实例化过程就是解析请求的过程
      * @param socket
      */
-    public HttpRequest(Socket socket) throws EmptyRequestException{
+    public HttpRequest(Socket socket) throws EmptyRequestException {
         this.socket = socket;
-
+        //1解析请求行
         parseRequestLine();
-
+        //2解析消息头
         parseHeaders();
-
+        //3解析消息正文
         parseContent();
 
     }
     //解析一个请求的三步骤:
     //1:解析请求行
-    private void parseRequestLine(){
+    private void parseRequestLine() throws EmptyRequestException {
         System.out.println("HttpRequest:开始解析请求行...");
         try {
             String line = readLine();
+            if(line.isEmpty()){
+                throw new EmptyRequestException();
+            }
             System.out.println("请求行:"+line);
             //http://localhost:8088/index.html
             //将请求行按照空格拆分为三部分，并分别赋值给上述变量
             String[] data = line.split("\\s");
             method = data[0];
-            /*
-                下面的代码可能在运行后浏览器发送请求拆分时，在这里赋值给uri时出现
-                字符串下标越界异常，这是由于浏览器发送了空请求，原因与常见错误5一样。
-             */
             uri = data[1];
             protocol = data[2];
+            parseUri();//解析请求行的三部分之后，对uri抽象路径部分进一步拆分
             System.out.println("method:"+method);//method:GET
             System.out.println("uri:"+uri);//uri:/index.html
             System.out.println("protocol:"+protocol);//protocol:HTTP/1.1
@@ -62,6 +65,59 @@ public class HttpRequest {
             e.printStackTrace();
         }
         System.out.println("HttpRequest:请求行解析完毕!");
+    }
+    //进一步解析uri
+    private void parseUri() {
+
+           if( uri.contains("?")){
+
+               String [] str= uri.split("\\?");
+               requestURI = str[0];
+              if(str.length>1) {
+
+                  queryString = str[1];
+              }
+               String []str1=queryString.split("\\&");
+               for(int i=0;i<str1.length;i++){
+
+                   String[] str2=str1[i].split("\\=");
+                    if (str2.length>1) {
+                        parameter.put(str2[0], str2[1]);
+                    }else {
+                        parameter.put(str2[0],null);
+                    }
+                   System.out.println("参数值："+parameter.get(str2[0]));
+
+               }
+
+               }else{
+
+                requestURI=uri;
+
+
+
+
+
+
+           } ;
+        /*
+            uri会存在两种情况：含有参数和不含有参数
+            不含有参数的样子如：/myweb/index.html
+            含有参数的样子如：/myweb/regUser?username=xxx&password=xxx...
+            因此我们要对uri进一步拆分，需求如下：
+            如果uri不含有参数，则不需要拆分，直接将uri的值赋值给requestURI即可
+
+
+            如果uri还有参数，则需要进行拆分：
+            1：将uri按照“？”拆分为两部分，左侧赋值给requestURI，右侧赋值给queryString
+            2：再讲queryString部分按照“&”拆分出每一组参数，然后每一组参数在按照“=”拆分为
+            参数名和参数值，并将参数名作为key，参数值作为value保存到parameters这个Map中完成
+            解析工作。
+         */
+        System.out.println("requestURI:"+requestURI);
+        System.out.println("queryString:"+queryString);
+        System.out.println("parameter:"+parameter);
+
     }
     //2:解析消息头
     private void parseHeaders(){
@@ -130,6 +186,22 @@ public class HttpRequest {
         return headers.get(name);
   }
 
+    public String getRequestURI() {
+        return requestURI;
+    }
+
+    public String getQueryString() {
+        return queryString;
+    }
+
+    /**
+     * 根据参数名获取参数值
+     * @param name
+     * @return
+     */
+    public String  getParameter(String name) {
+       return parameter.get(name);
+    }
 }
 
 

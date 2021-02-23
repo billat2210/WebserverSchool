@@ -1,13 +1,11 @@
 package com.webserver.core;
 
 import com.webserver.http.EmptyRequestException;
+import com.webserver.http.HttpContext;
 import com.webserver.http.HttpRequest;
 import com.webserver.http.HttpResponse;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 
 /**
@@ -28,38 +26,32 @@ public class ClientHandler implements Runnable{
             //1解析请求
             HttpRequest request = new HttpRequest(socket);
             HttpResponse response=new HttpResponse(socket);
-
             //2处理请求
               String str=  request.getUri();
 
             File file = new File("./webapps"+str);
+
             if ((!file.exists())||file.isDirectory()) {
-                File notFoundPage = new File("./webapps/root/404.html");
+               File notFoundPage = new File("./webapps/root/404.html");
 
                 response.setStatusCode(404);
                 response.setStatusReason("NotFound");
-                response.putHeader("Content-Type","text/html");
-                response.putHeader("Content-Length",file.length()+"");
+
                 response.setEntity(notFoundPage);
 
-
-
-
             }else {
-
                 response.setEntity(file);
 
-
-            }
+         }
             response.putHeader("server","WebServer");//server头时告知浏览器服务端是谁
             response.flush();
             System.out.println("响应发送完毕!");
-        }catch(EmptyRequestException e){
-
-        }catch(Exception e){
-            e.printStackTrace();
+        }catch (EmptyRequestException e){
+            //什么都不用做，上面抛出该异常就是为了忽略处理和响应操作
         }
-        finally{
+        catch(Exception e){
+            e.printStackTrace();
+        }finally{
             //处理完毕后与客户端断开连接
             try {
                 socket.close();
