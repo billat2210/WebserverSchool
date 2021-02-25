@@ -32,7 +32,10 @@ public class RegServlet {
             reg_info_error.html,里面居中显示一行字：注册信息输入有误，请重新注册
             注：该页面也放在webapps/myweb这个网络应用中。
          */if (username==null||password==null||nickname==null||ageStr==null||!ageStr.matches("[0-9]+")) {
-
+            System.out.println("username"+username);
+            System.out.println("password"+password);
+            System.out.println("nickname"+nickname);
+            System.out.println("ageStr"+ageStr);
             File file1 = new File("./webapps/myweb/reg_info_error.html");
 
             response.setEntity(file1);
