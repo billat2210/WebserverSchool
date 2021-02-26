@@ -3,7 +3,11 @@ package com.webserver.servlet;
 import com.webserver.http.HttpRequest;
 import com.webserver.http.HttpResponse;
 import com.webserver.vo.User;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.templateresolver.FileTemplateResolver;
 
+import javax.swing.text.AbstractDocument;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -40,41 +44,31 @@ public class ShowAllUserServlet {
         }catch (IOException e){
             e.printStackTrace();
         }
-            //2根据读取到的用户信息来生成页面
+            //2使用thymeleaf将数据与静态页面userList。html结合生成动态页面
+            //2.1创建Context实例，thymeleaf提供的，用于保存所有在页面上要显示的数据
+                Context context=new Context();//使用类似Map
+                context.setVariable("list",list);//类似Map的key，value
+            //2.2初始化thymeleaf模板引擎
+            //模板解释器，用来告知模板引擎模板的相关情况（模板就是要结合的静态页面)
+            FileTemplateResolver resolver=new FileTemplateResolver();
+            resolver.setTemplateMode("html");//模板是html
+            resolver.setCharacterEncoding("utf-8");//模板使用的字符集
+        //实例化模板引擎
+        TemplateEngine te=new TemplateEngine();
+        //将模板解释器设置给引擎，这样他就能了解模板的相关信息了
+            te.setTemplateResolver(resolver);
+            //2.3 利用模板引擎将数据与静态页面结合，生成动态页面
+        /*
+            process方法用于生成动态页面
+            参数1：模板为值（静态页面的位置）
+            参数2：要在页面上显示的动态数据
+            返回值：生成好的动态页面源代码
+         */
+                String html=te.process("./webapps/myweb/userList.html",context);
+                 System.out.println(html);
+                 PrintWriter pw=response.getWriter();
+                 pw.println(html);
 
-            PrintWriter pw=response.getWriter();
-
-
-            pw.println("<!DOCTYPE html>");
-            pw.println("<html lang=\"en\">");
-            pw.println("<head>");
-            pw.println("    <meta charset=\"UTF-8\">");
-            pw.println("    <title>用户信息</title>");
-            pw.println("</head>");
-            pw.println("<body>");
-            pw.println("    <center>");
-            pw.println("        <h1>用户信息表</h1>");
-            pw.println("       <table border=\"1\">");
-            pw.println("            <tr>");
-            pw.println("                <td>用户名</td>");
-            pw.println("                <td>密码</td>");
-            pw.println("                <td>昵称</td>");
-            pw.println("                <td>年龄</td>");
-            pw.println("            </tr>");
-            for(User user:list){
-                pw.println("            <tr>");
-                pw.println("                <td>"+user.getUsername()+"</td>");
-                pw.println("                <td>"+user.getPassword()+"</td>");
-                pw.println("                <td>"+user.getNickname()+"</td>");
-                pw.println("                <td>"+user.getAge()+"</td>");
-                pw.println("            </tr>");
-            }
-
-
-            pw.println("        </table>");
-            pw.println("    </center>");
-            pw.println("</body>");
-            pw.println("</html>");
                 //设置正文类型，告知浏览器他是一个页面
                 response.setContentType("text/html");
         System.out.println("ShowAllUserServlet:用户列表页面处理完毕！");
