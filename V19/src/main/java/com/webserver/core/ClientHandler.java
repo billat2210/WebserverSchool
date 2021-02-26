@@ -35,6 +35,7 @@ public class ClientHandler implements Runnable{
 
 
             Httpservlet servlet=ServerContext.getServlet(str);
+
               //首先判断本次请求是否为请求某个业务
             if(servlet!=null){//只要servlet不等于null，都会创建对应的servlet
                 //处理注册业务

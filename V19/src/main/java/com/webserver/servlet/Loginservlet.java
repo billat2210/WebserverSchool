@@ -2,6 +2,7 @@ package com.webserver.servlet;
 
 import com.webserver.http.HttpRequest;
 import com.webserver.http.HttpResponse;
+import org.apache.log4j.Logger;
 import org.dom4j.CDATA;
 
 import java.io.File;
@@ -11,6 +12,7 @@ import java.io.RandomAccessFile;
 import java.util.Arrays;
 
 public class Loginservlet extends Httpservlet{
+    private static Logger log=Logger.getLogger(Loginservlet.class);
 
     @Override
     public void doGet(HttpRequest request, HttpResponse response) {
@@ -18,6 +20,8 @@ public class Loginservlet extends Httpservlet{
     }
 
     public void doPost(HttpRequest request, HttpResponse response){
+        //info是用来记录一般信息
+        log.info("LoginServlet:开始处理登录....");
         String name=request.getParameter("username");
         String password=request.getParameter("password");
         if(name==null||password==null){
@@ -51,9 +55,10 @@ public class Loginservlet extends Httpservlet{
                 }
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            //error用来记录错误
+           log.error(e.getMessage(),e);
         } catch (IOException e) {
-            e.printStackTrace();
+           log.error(e.getMessage(),e);
         }
     }
 }
